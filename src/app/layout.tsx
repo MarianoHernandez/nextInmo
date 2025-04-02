@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import FooterModern from "@/components/footer";
 import { PropertyProvider } from "@/context/PropertyContext";
+import { FiltersProvider } from "@/context/filters-context";
+import WhatsappButton from "@/components/whatsapp-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,11 +29,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <PropertyProvider>
-        <Navbar />
-        {children}
-        <FooterModern />
+          <FiltersProvider>
+            <Navbar />
+            {children}
+            
+            <WhatsappButton />
+            <FooterModern />
+          </FiltersProvider>
         </PropertyProvider>
       </body>
     </html>

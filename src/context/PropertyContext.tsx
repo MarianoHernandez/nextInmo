@@ -34,7 +34,12 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       setAllProperties(allData)
       setHomeProperties(homeData)
     } catch (error) {
-      console.error('Error al obtener propiedades:', error)
+      setAllProperties([])
+      setHomeProperties({
+        properties: [],
+        land: [],
+        pinned: [],
+      } as Home)
     } finally {
       setLoading(false)
     }

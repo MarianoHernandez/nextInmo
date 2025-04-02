@@ -1,7 +1,7 @@
 "use client"
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import PropertyCard from "./PropertyCard"
+import PropertyCard from "./property-card"
 import { Property } from "@/types/property"
 
 interface PropertyCarouselProps {

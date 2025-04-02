@@ -5,11 +5,34 @@ import HomeCarousel from '@/components/HomeCarousel'
 import VideoCarousel from '@/components/video-carousel'
 import SimplePropertyMap from '@/components/map-home'
 import AgentHome from '@/components/nosotros'
-import { SearchFilters } from '@/components/search-filters'
+import { SearchFilters } from '@/components/search'
 import { useProperties } from '@/context/PropertyContext'
+import { useFilters } from '@/context/filters-context'
+import { useEffect } from 'react'
 
 export default function Home() {
   const { homeProperties, allProperties, loading } = useProperties()
+  const { setFilters } = useFilters()
+
+  useEffect(() => {
+    setFilters({
+      searchText: '',
+      location: '',
+      type: '',
+      dormitoriosMin: 0,
+      dormitoriosMax: Infinity,
+      bathsMin: 0,
+      bathsMax: Infinity,
+      garage: false,
+      pool: false,
+      precioMin: 0,
+      precioMax: Infinity,
+      areaMin: 0,
+      areaMax: Infinity,
+      areaLandMin: 0,
+      areaLandMax: Infinity,
+    })
+  }, [])
 
   return (
     <div>
@@ -62,7 +85,12 @@ export default function Home() {
             <SimplePropertyMap properties={allProperties} />
           </>
         )}
-
+        {loading && (
+          <div className="flex justify-center items-center h-50">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+            </div>
+            )}
+            
         <AgentHome />
       </div>
     </div>

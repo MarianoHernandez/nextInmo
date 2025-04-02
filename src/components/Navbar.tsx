@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { LuUser } from 'react-icons/lu';
 
@@ -10,6 +10,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,20 +18,26 @@ export default function Navbar() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      setIsMenuOpen(false);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
+
+  const isHome = pathname === '/';
+  const useSolidNav = scrolled || !isHome;
 
   const links = [
     { href: '/', label: 'Inicio' },
-    { href: '/sales', label: 'Ventas' },
-    { href: '/contact', label: 'Contacto' },
-    { href: '/login', label: 'Sobre Nosotros', icon: LuUser },
+    { href: '/ventas', label: 'Ventas' },
+    { href: '/contacto', label: 'Contacto' },
+    { href: '/login', label: 'Login', icon: LuUser },
   ];
 
   return (
     <nav
       className={`fixed top-0 w-full transition-all duration-300 z-50 flex items-center justify-between px-6 md:px-16 ${
-        scrolled ? 'bg-nav py-2 shadow-md' : 'bg-transparent py-6'
+        useSolidNav ? 'bg-nav py-2 shadow-md' : 'bg-transparent py-6'
       }`}
     >
       <div className="flex items-center gap-2 ml-2">
@@ -45,7 +52,7 @@ export default function Navbar() {
             width={150}
             height={150}
             className={`transition-all duration-300 ${
-              scrolled ? 'h-14' : 'h-16'
+              useSolidNav ? 'h-14' : 'h-16'
             }`}
           />
         </button>
@@ -66,7 +73,7 @@ export default function Navbar() {
           md:static md:items-center md:gap-4 md:p-0 md:bg-transparent
           ${
             isMenuOpen
-              ? `${scrolled ? 'bg-nav' : 'bg-transparent'} opacity-100 visible`
+              ? `${useSolidNav ? 'bg-nav' : 'bg-transparent'} opacity-100 visible`
               : 'opacity-0 invisible md:opacity-100 md:visible'
           }`}
       >
@@ -75,7 +82,7 @@ export default function Navbar() {
             key={href}
             href={href}
             className={`font-semibold text-white hover:underline transition-all duration-300 flex items-center gap-2 ${
-              scrolled ? 'text-sm' : 'text-base'
+              useSolidNav ? 'text-sm' : 'text-base'
             }`}
             onClick={() => setIsMenuOpen(false)}
           >

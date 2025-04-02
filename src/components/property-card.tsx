@@ -90,7 +90,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
         
         <CardContent className="p-4">
-          <div className="mb-2 flex items-center text-sm text-muted-foreground">
+          <div className="mb-2 flex items-center capitalize text-sm text-muted-foreground">
             <MapPin className="mr-1 h-4 w-4" />
             <span>{property.address}</span>
           </div>
