@@ -15,7 +15,6 @@ interface MapComponentProps {
 export default function MapComponent({ properties, height, center, zoom }: MapComponentProps) {
   // Arreglar el problema de los iconos de Leaflet
   useEffect(() => {
-    delete L.Icon.Default.prototype._getIconUrl
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
       iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
