@@ -24,8 +24,8 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       setLoading(true)
 
       const [allRes, homeRes] = await Promise.all([
-        fetch(BASE_URL + '/properties/findAll'),
-        fetch(BASE_URL + '/properties/home')
+        fetch(process.env.BASE_URL + '/properties/findAll'),
+        fetch(process.env.BASE_URL + '/properties/home')
       ])
 
       const allData = await allRes.json()
