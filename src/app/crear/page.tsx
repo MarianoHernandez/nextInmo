@@ -1,10 +1,6 @@
-import type { Metadata } from "next"
-import CreatePropertyForm from "@/components/admin/create-property-form"
+'use client'
 
-export const metadata: Metadata = {
-  title: "Crear Nueva Propiedad",
-  description: "Formulario para crear una nueva propiedad inmobiliaria",
-}
+import CreatePropertyForm from "@/components/admin/create-property-form"
 
 export default function CreatePage() {
   return <CreatePropertyForm />

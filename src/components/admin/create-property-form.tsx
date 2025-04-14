@@ -14,7 +14,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { ImageUploader } from "@/components/admin/image-uploader"
-import { LocationPicker } from "@/components/admin/location-picker"
 import { toast } from "sonner"
 import { CheckCircle2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { PropertyTypeLabels } from "@/utils/type-label"
@@ -631,7 +630,7 @@ export default function CreatePropertyForm() {
                     <FormItem>
                       <FormLabel>Ubicación en el Mapa</FormLabel>
                       <FormControl>
-                        <LocationPicker value={field.value} onChange={(value) => field.onChange(value)} />
+                        {/* <LocationPicker value={field.value} onChange={(value) => field.onChange(value)} /> */}
                       </FormControl>
                       <FormDescription>Seleccione la ubicación exacta de la propiedad en el mapa.</FormDescription>
                       <FormMessage />
