@@ -1,6 +1,6 @@
 'use client'
 
-import HomeVideo from '@/components/HomeVideo'
+import HomeVideo from '@/components/home-video'
 import HomeCarousel from '@/components/HomeCarousel'
 import VideoCarousel from '@/components/video-carousel'
 import SimplePropertyMap from '@/components/map-home'
@@ -31,6 +31,7 @@ export default function Home() {
       areaMax: Infinity,
       areaLandMin: 0,
       areaLandMax: Infinity,
+      orderBy: 'priceDesc',
     })
   }, [])
 

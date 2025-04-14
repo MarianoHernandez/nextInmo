@@ -32,6 +32,8 @@ export default function Navbar() {
     { href: '/ventas', label: 'Ventas' },
     { href: '/contacto', label: 'Contacto' },
     { href: '/login', label: 'Login', icon: LuUser },
+    { href: '/crear', label: 'Crear propiedad' },
+
   ];
 
   return (

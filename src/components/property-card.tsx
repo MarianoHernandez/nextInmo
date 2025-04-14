@@ -37,7 +37,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   }
 
   return (
-    <Link href={`/properties/${property.id}`} className="block">
+    <Link href={`/propiedades/${property.id}`} className="block">
       <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg">
         <div className="relative">
           <div className="relative h-[270px] w-full overflow-hidden">

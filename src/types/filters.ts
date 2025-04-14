@@ -14,4 +14,5 @@ export type Filters = {
     areaMax: number
     areaLandMin: number,
     areaLandMax: number,
+    orderBy: string
   }

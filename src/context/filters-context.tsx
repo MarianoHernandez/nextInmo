@@ -20,6 +20,7 @@ const defaultFilters: Filters = {
   areaMax: Infinity,
   areaLandMin: 0,
   areaLandMax: Infinity,
+  orderBy: 'date-desc',
 }
 
 const FiltersContext = createContext<{

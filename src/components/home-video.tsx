@@ -7,9 +7,9 @@ export default function HomeVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const videos = [
-    '/videos/barco.mp4',
-    '/videos/principal.mp4',
-    '/videos/lapaloma.mp4',
+    'https://images-inmo.s3.us-east-2.amazonaws.com/faro.mp4',
+    'https://images-inmo.s3.us-east-2.amazonaws.com/principal.mp4',
+    'https://images-inmo.s3.us-east-2.amazonaws.com/barco.mp4',
   ];
 
   useEffect(() => {

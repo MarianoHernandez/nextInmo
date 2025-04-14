@@ -5,12 +5,11 @@ import PropertyCard from '@/components/property-card'
 import AsideSearch from '@/components/aside'
 import { SimpleTitle } from '@/components/simple-title'
 import { useFilters } from '@/context/filters-context'
+import { OrderSelect } from './order-filter'
 
-export default function BuscarPageContent() {
+export default function SearchPageContent() {
   const { allProperties } = useProperties()
   const { filters } = useFilters()
-
-  console.log('Filters:', filters)
 
   const filteredProperties = allProperties.filter((property) => {
     const matchesText =
@@ -44,13 +43,39 @@ export default function BuscarPageContent() {
     )
   })
 
+  switch (filters.orderBy) {
+    case 'price-asc':
+      filteredProperties.sort((a, b) => a.price - b.price)
+      break
+    case 'price-desc':
+      filteredProperties.sort((a, b) => b.price - a.price)
+      break
+    case 'date-asc':
+      filteredProperties.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      break
+    case 'date-desc':
+      filteredProperties.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      break
+    case 'area-desc':
+      filteredProperties.sort((a, b) => (b.area ?? 0) - (a.area ?? 0))
+      break
+    case 'area-asc':
+      filteredProperties.sort((a, b) => (a.area ?? 0) - (b.area ?? 0))
+      break
+
+  }
+
   return (
     <div className="container mx-auto p-4 nav_padding">
       <SimpleTitle title="Ventas" />
+      <div className="w-full flex justify-end mb-4">
+        <OrderSelect />
+      </div>
 
       <div className="flex flex-col lg:flex-row gap-6 mt-6">
-        <AsideSearch />
 
+        <AsideSearch />
+        
         <section className="flex-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredProperties.length > 0 ? (
             filteredProperties.map((property) => (

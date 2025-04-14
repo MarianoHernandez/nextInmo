@@ -44,7 +44,7 @@ export function SearchFilters() {
             onChange={(e) => setFilters((f) => ({ ...f, searchText: e.target.value }))}
           />
         </div>
-        <Button onClick={handleSearch} className="md:w-40 w-full bg-nav text-white text-base">
+        <Button onClick={handleSearch} className="md:w-40 w-full bg-nav text-white text-base hover:bg-accent">
           Buscar
         </Button>
       </div>
