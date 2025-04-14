@@ -223,6 +223,11 @@ export default function CreatePropertyForm() {
   }
 
   return (
+    <div className="container nav_padding mx-auto py-8">
+    <div className="mb-8">
+      <h1 className="text-3xl font-bold">Crear Nueva Propiedad</h1>
+      <p className="text-muted-foreground mt-2">Complete el formulario para añadir una nueva propiedad al sistema.</p>
+    </div>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <Card className="pb-4">
@@ -808,5 +813,6 @@ export default function CreatePropertyForm() {
         </Card>
       </form>
     </Form>
+    </div>
   )
 }
