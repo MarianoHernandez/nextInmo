@@ -1,3 +1,5 @@
+'use client'
+
 import type { Metadata } from "next"
 import CreatePropertyForm from "@/components/admin/create-property-form"
 
