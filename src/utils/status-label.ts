@@ -8,3 +8,4 @@ export const PropertyStatusLabels: Record<PropertyStatus, string> = {
     [PropertyStatus.UnderConstruction]: 'En construcción',
     [PropertyStatus.Reserved]: 'Reservada',
   };
+  
