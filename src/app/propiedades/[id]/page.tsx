@@ -1,21 +1,11 @@
-// app/propiedad/[id]/page.tsx
 'use client'
+import dynamic from 'next/dynamic'
 
-import PropertyDetail from '@/components/property-detail'
-import { useProperties } from '@/context/PropertyContext'
-import { useParams } from 'next/navigation'
-import { notFound } from "next/navigation"
+const PropertyDetailClient = dynamic(
+  () => import('@/components/property-detail-wrapper'),
+  { ssr: false }
+)
 
-export default function PdpPage() {
-  const params = useParams()
-  const id = params?.id
-  const { allProperties } = useProperties()
-  const property = allProperties.find((property) => property.id === Number(id))
-  
-  if (!property) {
-    notFound()
-  }
-  return (
-    <PropertyDetail property={property}/>
-  )
+export default function ClientPropertyDetail() {
+  return <PropertyDetailClient />
 }

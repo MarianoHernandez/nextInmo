@@ -9,7 +9,7 @@ type PropertyContextType = {
   allProperties: Property[]
   homeProperties: Home
   loading: boolean
-  reloadProperties: () => void
+  reloadProperties: () => Promise<void>
 }
 
 const PropertyContext = createContext<PropertyContextType | undefined>(undefined)
@@ -32,6 +32,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
       const homeData = await homeRes.json()
 
       setAllProperties(allData)
+      console.log('allData', allData)
       setHomeProperties(homeData)
     } catch (error) {
       setAllProperties([])

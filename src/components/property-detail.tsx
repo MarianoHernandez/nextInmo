@@ -1,9 +1,7 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
+import { useState } from "react";
 import {
-  ArrowLeft,
   Bath,
   Bed,
   Building,
@@ -12,53 +10,53 @@ import {
   ChevronLeft,
   ChevronRight,
   Expand,
-  Heart,
   Home,
   MapPin,
   Maximize2,
-  PocketIcon as Pool,
-  Share2,
+  WavesLadder,
   Ruler,
-} from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { type Property, PropertyStatus, type PropertyTypes } from "@/types/property"
-import { formatPrice } from "@/utils/property-utils"
-import PropertyMap from "@/components/property-map"
-import ContactForm from "@/components/contact-form"
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  type Property,
+  PropertyStatus,
+  type PropertyTypes,
+} from "@/types/property";
+import { formatPrice } from "@/utils/property-utils";
+import PropertyMap from "@/components/property-map";
+import ContactForm from "@/components/contact-form";
 
 interface PropertyDetailProps {
-  property: Property
+  property: Property;
 }
 
 export default function PropertyDetail({ property }: PropertyDetailProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [showAllImages, setShowAllImages] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showAllImages, setShowAllImages] = useState(false);
 
-  const formattedPrice = formatPrice(property.price, property.status)
+  const formattedPrice = formatPrice(property.price, property.status);
 
   const nextImage = () => {
     if (currentImageIndex < property.imageSrc.length - 1) {
-      setCurrentImageIndex(currentImageIndex + 1)
+      setCurrentImageIndex(currentImageIndex + 1);
     } else {
-      setCurrentImageIndex(0)
+      setCurrentImageIndex(0);
     }
-  }
+  };
 
   const prevImage = () => {
     if (currentImageIndex > 0) {
-      setCurrentImageIndex(currentImageIndex - 1)
+      setCurrentImageIndex(currentImageIndex - 1);
     } else {
-      setCurrentImageIndex(property.imageSrc.length - 1)
+      setCurrentImageIndex(property.imageSrc.length - 1);
     }
-  }
+  };
 
   const selectImage = (index: number) => {
-    setCurrentImageIndex(index)
-  }
+    setCurrentImageIndex(index);
+  };
 
   const getPropertyTypeLabel = (type: PropertyTypes) => {
     const types = {
@@ -68,23 +66,23 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
       office: "Oficina",
       store: "Local Comercial",
       other: "Otro",
-    }
-    return types[type] || "Propiedad"
-  }
+    };
+    return types[type] || "Propiedad";
+  };
 
   const getStatusLabel = (status: PropertyStatus[]) => {
-    if (status.includes(PropertyStatus.ForRent)) return "En Alquiler"
-    if (status.includes(PropertyStatus.ForSale)) return "En Venta"
-    if (status.includes(PropertyStatus.Sold)) return "Vendido"
-    if (status.includes(PropertyStatus.Rented)) return "Alquilado"
-    if (status.includes(PropertyStatus.UnderConstruction)) return "En Construcción"
-    if (status.includes(PropertyStatus.Reserved)) return "Reservado"
-    return "Disponible"
-  }
+    if (status.includes(PropertyStatus.ForRent)) return "En Alquiler";
+    if (status.includes(PropertyStatus.ForSale)) return "En Venta";
+    if (status.includes(PropertyStatus.Sold)) return "Vendido";
+    if (status.includes(PropertyStatus.Rented)) return "Alquilado";
+    if (status.includes(PropertyStatus.UnderConstruction))
+      return "En Construcción";
+    if (status.includes(PropertyStatus.Reserved)) return "Reservado";
+    return "Disponible";
+  };
 
   return (
     <div className="container nav_padding mx-auto px-4 py-8">
-
       {/* Título y ubicación */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold">{property.title}</h1>
@@ -138,7 +136,9 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                 <button
                   key={index}
                   onClick={() => selectImage(index)}
-                  className={`h-2 w-2 rounded-full ${index === currentImageIndex ? "bg-white" : "bg-white/50"}`}
+                  className={`h-2 w-2 rounded-full ${
+                    index === currentImageIndex ? "bg-white" : "bg-white/50"
+                  }`}
                   aria-label={`Ver imagen ${index + 1}`}
                 />
               ))}
@@ -147,7 +147,11 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
             {/* Badges */}
             <div className="absolute left-4 top-4 flex flex-col gap-2">
               <Badge
-                variant={property.status.includes(PropertyStatus.ForRent) ? "secondary" : "default"}
+                variant={
+                  property.status.includes(PropertyStatus.ForRent)
+                    ? "secondary"
+                    : "default"
+                }
                 className="text-sm"
               >
                 {getStatusLabel(property.status)}
@@ -169,7 +173,9 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
               key={index}
               onClick={() => selectImage(index)}
               className={`relative h-20 overflow-hidden rounded-md ${
-                index === currentImageIndex ? "ring-2 ring-primary ring-offset-2" : ""
+                index === currentImageIndex
+                  ? "ring-2 ring-primary ring-offset-2"
+                  : ""
               }`}
             >
               <img
@@ -191,52 +197,55 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
             <CardContent className="p-6">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold">{formattedPrice}</h2>
-                  {property.contribution && (
-                    <p className="text-sm text-muted-foreground">Gastos comunes: {property.contribution}</p>
-                  )}
+                  <h2 className="text-2xl font-bold">USD {formattedPrice}</h2>
                 </div>
 
                 <div className="flex flex-wrap gap-6">
-                  {property.rooms !== undefined && (
+                  {typeof property.rooms === "number" && property.rooms > 1 && (
                     <div className="flex flex-col items-center">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                         <Bed className="h-5 w-5 text-primary" />
                       </div>
                       <span className="mt-1 text-sm font-medium">
-                        {property.rooms} {property.rooms === 1 ? "Dormitorio" : "Dormitorios"}
+                        {property.rooms}{" "}
+                        {property.rooms === 1 ? "Dormitorio" : "Dormitorios"}
                       </span>
                     </div>
                   )}
-
-                  {property.bathrooms !== undefined && (
-                    <div className="flex flex-col items-center">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                        <Bath className="h-5 w-5 text-primary" />
+                  {typeof property.bathrooms === "number" &&
+                    property.bathrooms > 1 && (
+                      <div className="flex flex-col items-center">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                          <Bath className="h-5 w-5 text-primary" />
+                        </div>
+                        <span className="mt-1 text-sm font-medium">
+                          {property.bathrooms}{" "}
+                          {property.bathrooms === 1 ? "Baño" : "Baños"}
+                        </span>
                       </div>
-                      <span className="mt-1 text-sm font-medium">
-                        {property.bathrooms} {property.bathrooms === 1 ? "Baño" : "Baños"}
-                      </span>
-                    </div>
-                  )}
-
-                  {property.area && (
+                    )}
+                  {typeof property.area === "number" && property.area > 1 && (
                     <div className="flex flex-col items-center">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                         <Maximize2 className="h-5 w-5 text-primary" />
                       </div>
-                      <span className="mt-1 text-sm font-medium">{property.area} m²</span>
+                      <span className="mt-1 text-sm font-medium">
+                        {property.area} m²
+                      </span>
                     </div>
                   )}
 
-                  {property.lotSize && (
-                    <div className="flex flex-col items-center">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                        <Ruler className="h-5 w-5 text-primary" />
+                  {typeof property.lotSize === "number" &&
+                    property.lotSize > 1 && (
+                      <div className="flex flex-col items-center">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                          <Ruler className="h-5 w-5 text-primary" />
+                        </div>
+                        <span className="mt-1 text-sm font-medium">
+                          {property.lotSize} m² terreno
+                        </span>
                       </div>
-                      <span className="mt-1 text-sm font-medium">{property.lotSize} m² terreno</span>
-                    </div>
-                  )}
+                    )}
                 </div>
               </div>
             </CardContent>
@@ -291,7 +300,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
 
                     {property.pool && (
                       <div className="flex items-center gap-2">
-                        <Pool className="h-5 w-5 text-primary" />
+                        <WavesLadder className="h-5 w-5 text-primary" />
                         <span>Piscina</span>
                       </div>
                     )}
@@ -347,40 +356,19 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
         {/* Columna derecha (1/3) */}
         <div className="space-y-6">
           {/* Formulario de contacto */}
-          <Card className="pt-4">
+          <Card className="py-4">
             <CardHeader>
               <CardTitle>¿Te interesa esta propiedad?</CardTitle>
             </CardHeader>
             <CardContent>
-              <ContactForm propertyId={property.id} propertyTitle={property.title} />
-            </CardContent>
-          </Card>
-
-          {/* Información del agente */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Agente inmobiliario</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-4">
-                <div className="h-16 w-16 overflow-hidden rounded-full">
-                  <img
-                    src="/placeholder.svg?height=100&width=100"
-                    alt="Agente inmobiliario"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Agente Inmobiliario</p>
-                  <Button variant="link" className="h-auto p-0 text-sm">
-                    Ver perfil
-                  </Button>
-                </div>
-              </div>
+              <ContactForm
+                propertyId={property.id}
+                propertyTitle={property.title}
+              />
             </CardContent>
           </Card>
         </div>
       </div>
     </div>
-  )
+  );
 }

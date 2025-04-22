@@ -14,9 +14,7 @@ interface PropertyMapProps {
 export default function PropertyMap({ lat, lng, address }: PropertyMapProps) {
   const mapRef = useRef<L.Map | null>(null)
 
-  // Solucionar el problema de los iconos de Leaflet en Next.js
   useEffect(() => {
-    // Asegurarse de que el código solo se ejecute en el cliente
     const L = require("leaflet")
     
     delete L.Icon.Default.prototype._getIconUrl
