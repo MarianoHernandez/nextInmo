@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Bath,
   Bed,
@@ -27,6 +27,7 @@ import {
 import { formatPrice } from "@/utils/property-utils";
 import PropertyMap from "@/components/property-map";
 import ContactForm from "@/components/contact-form";
+import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
 
 interface PropertyDetailProps {
   property: Property;
@@ -35,8 +36,18 @@ interface PropertyDetailProps {
 export default function PropertyDetail({ property }: PropertyDetailProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showAllImages, setShowAllImages] = useState(false);
+  const [features, setFeatures] = useState<
+    { title: string; values: [{ title: string; value: string }] }[]
+  >([]);
 
   const formattedPrice = formatPrice(property.price, property.status);
+
+  useEffect(() => {
+    if (property.features.length > 0) {
+      const parsedFeatures = JSON.parse(property.features);
+      setFeatures(parsedFeatures);
+    }
+  }, []);
 
   const nextImage = () => {
     if (currentImageIndex < property.imageSrc.length - 1) {
@@ -166,25 +177,88 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
           </div>
         </div>
 
-        {/* Miniaturas */}
-        <div className="mt-4 grid grid-cols-5 gap-2">
-          {property.imageSrc.slice(0, 5).map((src, index) => (
+        {showAllImages && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
             <button
-              key={index}
-              onClick={() => selectImage(index)}
-              className={`relative h-20 overflow-hidden rounded-md ${
-                index === currentImageIndex
-                  ? "ring-2 ring-primary ring-offset-2"
-                  : ""
-              }`}
+              onClick={() => setShowAllImages(false)}
+              className="absolute top-4 right-4 z-50 text-white hover:text-red-400 text-3xl font-bold"
             >
-              <img
-                src={src || "/placeholder.svg"}
-                alt={`${property.title} - Miniatura ${index + 1}`}
-                className="h-full w-full object-cover"
-              />
+              &times;
             </button>
-          ))}
+
+            <div className="relative max-w-5xl w-full px-4">
+              <button
+                onClick={prevImage}
+                className="absolute left-0 top-1/2 z-50 -translate-y-1/2 text-white hover:text-primary"
+              >
+                <ChevronLeft className="h-10 w-10" />
+              </button>
+              <img
+                src={property.imageSrc[currentImageIndex]}
+                alt={`Imagen ampliada ${currentImageIndex + 1}`}
+                className="mx-auto max-h-[80vh] w-full object-contain rounded"
+              />
+              <button
+                onClick={nextImage}
+                className="absolute right-0 top-1/2 z-50 -translate-y-1/2 text-white hover:text-primary"
+              >
+                <ChevronRight className="h-10 w-10" />
+              </button>
+
+              {/* Miniaturas abajo en el modal */}
+              <div className="mt-6 flex justify-center gap-2 overflow-x-auto">
+                {property.imageSrc.map((src, index) => (
+                  <button
+                    key={index}
+                    onClick={() => selectImage(index)}
+                    className={`h-16 w-24 overflow-hidden rounded-md border ${
+                      index === currentImageIndex
+                        ? "border-primary"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={src}
+                      alt={`Miniatura ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Miniaturas */}
+        <div className="mt-4 relative">
+          <Carousel
+            opts={{
+              align: "start",
+              loop: false,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="p-2">
+              {property.imageSrc.map((src, index) => (
+                <CarouselItem key={index} className="basis-1/5">
+                  <button
+                    onClick={() => selectImage(index)}
+                    className={`h-20 w-full overflow-hidden rounded-md ${
+                      index === currentImageIndex
+                        ? "ring-2 ring-primary ring-offset-2"
+                        : ""
+                    }`}
+                  >
+                    <img
+                      src={src || "/placeholder.svg"}
+                      alt={`${property.title} - Miniatura ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
         </div>
       </div>
 
@@ -274,6 +348,24 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
 
             <TabsContent value="features" className="mt-6">
               <Card className="border-none shadow-none">
+                {property.features &&
+                  property.features.length > 0 &&
+                  features.map((feature, index) => (
+                    <div key={index} className="mb-4">
+                      <CardHeader className="mb-4">
+                        <CardTitle>{feature.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                          {feature.values.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <span className="font-bold">{item.title}:</span> {item.value}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </div>
+                  ))}
                 <CardHeader>
                   <CardTitle>Características y comodidades</CardTitle>
                 </CardHeader>
@@ -284,7 +376,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                       <span>Tipo: {getPropertyTypeLabel(property.type)}</span>
                     </div>
 
-                    {property.yearBuilt && (
+                    {typeof property.yearBuilt === "number" && property.yearBuilt > 0 && (
                       <div className="flex items-center gap-2">
                         <Calendar className="h-5 w-5 text-primary" />
                         <span>Año de construcción: {property.yearBuilt}</span>
@@ -310,14 +402,14 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                       <span>Estado: {getStatusLabel(property.status)}</span>
                     </div>
 
-                    {property.area && (
-                      <div className="flex items-center gap-2">
-                        <Maximize2 className="h-5 w-5 text-primary" />
-                        <span>Área construida: {property.area} m²</span>
-                      </div>
-                    )}
+                    {typeof property.area === "number" && property.area > 0 && (
+  <div className="flex items-center gap-2">
+    <Maximize2 className="h-5 w-5 text-primary" />
+    <span>Área construida: {property.area} m²</span>
+  </div>
+)}
 
-                    {property.lotSize && (
+{typeof property.lotSize === "number" && property.lotSize > 0 && (
                       <div className="flex items-center gap-2">
                         <Ruler className="h-5 w-5 text-primary" />
                         <span>Tamaño del terreno: {property.lotSize} m²</span>

@@ -43,5 +43,6 @@ export interface Property {
   createdAt: string
   createdBy: any
   rents: any[]
+  features: string
 }
 

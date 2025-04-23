@@ -6,6 +6,7 @@ import AsideSearch from '@/components/aside'
 import { SimpleTitle } from '@/components/simple-title'
 import { useFilters } from '@/context/filters-context'
 import { OrderSelect } from './order-filter'
+import { stat } from 'fs'
 
 export default function SearchPageContent() {
   const { allProperties } = useProperties()
@@ -14,7 +15,16 @@ export default function SearchPageContent() {
   const filteredProperties = allProperties.filter((property) => {
     const matchesText =
       property.title.toLowerCase().includes(filters.searchText.toLowerCase()) ||
-      property.shortDescription?.toLowerCase().includes(filters.searchText.toLowerCase())
+      property.shortDescription?.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+      property.longDescription?.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+      property.neighborhood.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+      property.type.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+      property.address.toLowerCase().includes(filters.searchText.toLowerCase()) ||
+      property.status.some((status) =>
+        status.toLowerCase().includes(filters.searchText.toLowerCase())
+      ) ||
+      property.id.toString().includes(filters.searchText.toLowerCase())
+
 
     const matchesLocation =
       filters.location === 'cualquiera' ||
