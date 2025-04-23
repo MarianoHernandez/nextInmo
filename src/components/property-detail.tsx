@@ -287,7 +287,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                     </div>
                   )}
                   {typeof property.bathrooms === "number" &&
-                    property.bathrooms > 1 && (
+                    property.bathrooms > 0 && (
                       <div className="flex flex-col items-center">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                           <Bath className="h-5 w-5 text-primary" />
@@ -298,7 +298,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                         </span>
                       </div>
                     )}
-                  {typeof property.area === "number" && property.area > 1 && (
+                  {typeof property.area === "number" && property.area > 0 && (
                     <div className="flex flex-col items-center">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                         <Maximize2 className="h-5 w-5 text-primary" />
@@ -310,7 +310,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                   )}
 
                   {typeof property.lotSize === "number" &&
-                    property.lotSize > 1 && (
+                    property.lotSize > 0 && (
                       <div className="flex flex-col items-center">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                           <Ruler className="h-5 w-5 text-primary" />
@@ -347,26 +347,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
             </TabsContent>
 
             <TabsContent value="features" className="mt-6">
-              <Card className="border-none shadow-none">
-                {property.features &&
-                  property.features.length > 0 &&
-                  features.map((feature, index) => (
-                    <div key={index} className="mb-4">
-                      <CardHeader className="mb-4">
-                        <CardTitle>{feature.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                          {feature.values.map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-2">
-                              <span className="font-bold">{item.title}:</span> {item.value}
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </div>
-                  ))}
-                <CardHeader>
+            <CardHeader className="mb-4">
                   <CardTitle>Características y comodidades</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -376,12 +357,13 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                       <span>Tipo: {getPropertyTypeLabel(property.type)}</span>
                     </div>
 
-                    {typeof property.yearBuilt === "number" && property.yearBuilt > 0 && (
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-5 w-5 text-primary" />
-                        <span>Año de construcción: {property.yearBuilt}</span>
-                      </div>
-                    )}
+                    {typeof property.yearBuilt === "number" &&
+                      property.yearBuilt > 0 && (
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-5 w-5 text-primary" />
+                          <span>Año de construcción: {property.yearBuilt}</span>
+                        </div>
+                      )}
 
                     {property.garage && (
                       <div className="flex items-center gap-2">
@@ -403,20 +385,41 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                     </div>
 
                     {typeof property.area === "number" && property.area > 0 && (
-  <div className="flex items-center gap-2">
-    <Maximize2 className="h-5 w-5 text-primary" />
-    <span>Área construida: {property.area} m²</span>
-  </div>
-)}
-
-{typeof property.lotSize === "number" && property.lotSize > 0 && (
                       <div className="flex items-center gap-2">
-                        <Ruler className="h-5 w-5 text-primary" />
-                        <span>Tamaño del terreno: {property.lotSize} m²</span>
+                        <Maximize2 className="h-5 w-5 text-primary" />
+                        <span>Área construida: {property.area} m²</span>
                       </div>
                     )}
+
+                    {typeof property.lotSize === "number" &&
+                      property.lotSize > 0 && (
+                        <div className="flex items-center gap-2">
+                          <Ruler className="h-5 w-5 text-primary" />
+                          <span>Tamaño del terreno: {property.lotSize} m²</span>
+                        </div>
+                      )}
                   </div>
                 </CardContent>
+              <Card className="border-none shadow-none mt-6">
+                {property.features &&
+                  property.features.length > 0 &&
+                  features.map((feature, index) => (
+                    <div key={index} className="mb-4">
+                      <CardHeader className="mb-4">
+                        <CardTitle>{feature.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                          {feature.values.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-2">
+                              <span className="font-bold">{item.title}:</span>{" "}
+                              {item.value}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </div>
+                  ))}
               </Card>
             </TabsContent>
 
