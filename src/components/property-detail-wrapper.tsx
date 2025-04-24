@@ -4,39 +4,53 @@ import { useEffect, useState } from 'react'
 import { useParams, notFound } from 'next/navigation'
 import PropertyDetail from '@/components/property-detail'
 import { useProperties } from '@/context/PropertyContext'
+import { Property } from '@/types/property'
+import Loading from '@/app/propiedades/[id]/loading'
+import { GetPropertyById } from '@/service/properties'
 
 export default function PropertyDetailWrapper() {
   const params = useParams()
-  const id = params?.id
+  const id = Number(params?.id)
   const { allProperties, reloadProperties } = useProperties()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [property, setProperty] = useState<Property | null>(null)
 
   useEffect(() => {
-    const load = async () => {
-        console.log('Loading property detail')
-      if (!allProperties || allProperties.length === 0) {
-
-        setIsLoading(true)
-        console.log('allProperties is empty, reloading properties')
-        await reloadProperties()
-        setIsLoading(false)
+    const loadProperty = async () => {
+      let found = allProperties.find((p) => p.id === id) || null
+  
+      if (!found) {
+        if (allProperties.length === 0) {
+          await reloadProperties()
+          found = allProperties.find((p) => p.id === id) || null
+        }
+  
+        if (!found) {
+          try {
+            found = await GetPropertyById(id) // ← CORREGIDO: sin `const`
+            if (!found) {
+              notFound()
+              return
+            }
+          } catch (error) {
+            console.error('Error cargando propiedad por ID:', error)
+            notFound()
+            return
+          }
+        }
       }
+  
+      setProperty(found)
+      setIsLoading(false)
     }
-    console.log('useEffect triggered')
-
-    load()
-  }, [])
-
-  const property = allProperties.find((p) => p.id === Number(id))
-
-  if (!property && !isLoading) {
-    notFound()
-  }
-
+  
+    loadProperty()
+  }, [id])
+  
   if (isLoading || !property) {
     return (
-      <div className="flex h-[400px] w-full items-center justify-center text-muted-foreground">
-        Cargando propiedad...
+      <div className="flex w-full items-center justify-center text-muted-foreground">
+        <Loading />
       </div>
     )
   }

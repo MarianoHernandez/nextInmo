@@ -4,8 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export default function Loading() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Navegación */}
+<div className="min-h-screen container nav_padding mx-auto px-4 py-8">
+{/* Navegación */}
       <div className="mb-6 flex items-center justify-between">
         <Skeleton className="h-6 w-32" />
         <div className="flex gap-2">
