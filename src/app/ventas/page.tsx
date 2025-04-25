@@ -2,7 +2,7 @@
 'use client'
 
 import SearchPageContent from '@/components/search-page'
-import { useProperties } from '@/context/PropertyContext'
+import { useProperties } from '@/context/property-context'
 
 export default function SalePage() {
   const { allProperties, reloadProperties, loading } = useProperties()

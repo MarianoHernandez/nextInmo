@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { LuUser } from 'react-icons/lu';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useUser } from '@/context/user-context';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,12 +15,10 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated } = useUser();
 
   const isHome = pathname === '/';
   const useSolidNav = scrolled || !isHome;
-
-  // Simular usuario logueado
-  const isAuthenticated = false;
 
   useEffect(() => {
     const handleScroll = () => {

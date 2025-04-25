@@ -3,10 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import FooterModern from "@/components/footer";
-import { PropertyProvider } from "@/context/PropertyContext";
+import { PropertyProvider } from "@/context/property-context";
 import { FiltersProvider } from "@/context/filters-context";
 import WhatsappButton from "@/components/whatsapp-button";
-import { Toaster } from 'sonner'
+import { Toaster } from "sonner";
+import { UserProvider } from "@/context/user-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,15 +35,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster />
-        <PropertyProvider>
-          <FiltersProvider>
-            <Navbar />
-            {children}
+        <UserProvider>
+          <PropertyProvider>
+            <FiltersProvider>
+              <Navbar />
+              {children}
 
-            <WhatsappButton />
-            <FooterModern />
-          </FiltersProvider>
-        </PropertyProvider>
+              <WhatsappButton />
+              <FooterModern />
+            </FiltersProvider>
+          </PropertyProvider>
+        </UserProvider>
       </body>
     </html>
   );

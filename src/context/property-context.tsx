@@ -1,6 +1,5 @@
 'use client'
 
-import { BASE_URL } from '@/constants/constants'
 import { GetAllProperties, GetHomeProperties } from '@/service/properties'
 import { Home } from '@/types/home'
 import { Property } from '@/types/property'

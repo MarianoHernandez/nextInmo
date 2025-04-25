@@ -1,6 +1,6 @@
 'use client'
 
-import { useProperties } from '@/context/PropertyContext'
+import { useProperties } from '@/context/property-context'
 import PropertyCard from '@/components/property-card'
 import AsideSearch from '@/components/aside'
 import { SimpleTitle } from '@/components/simple-title'

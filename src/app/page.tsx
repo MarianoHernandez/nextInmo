@@ -6,7 +6,7 @@ import VideoCarousel from '@/components/video-carousel'
 import SimplePropertyMap from '@/components/map-home'
 import AgentHome from '@/components/nosotros'
 import { SearchFilters } from '@/components/search'
-import { useProperties } from '@/context/PropertyContext'
+import { useProperties } from '@/context/property-context'
 import { useFilters } from '@/context/filters-context'
 import { useEffect } from 'react'
 

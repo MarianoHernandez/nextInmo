@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, notFound } from 'next/navigation'
 import PropertyDetail from '@/components/property-detail'
-import { useProperties } from '@/context/PropertyContext'
+import { useProperties } from '@/context/property-context'
 import { Property } from '@/types/property'
 import Loading from '@/app/propiedades/[id]/loading'
 import { GetPropertyById } from '@/service/properties'
