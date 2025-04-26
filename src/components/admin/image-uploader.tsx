@@ -9,32 +9,31 @@ import { toast } from "sonner"
 
 interface ImageUploaderProps {
   value: string[]
-  onChange: (value: string[]) => void
+  onChange: (value: string[], files?: File[]) => void
   maxFiles?: number
 }
 
 export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false)
+  const [files, setFiles] = useState<File[]>([])
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      if (value.length + acceptedFiles.length > maxFiles) {
+      if (files.length + acceptedFiles.length > maxFiles) {
         toast.warning("Límite de imágenes excedido")
         return
       }
-
+  
       setIsUploading(true)
-
+  
       try {
-        // Aquí iría la lógica real para subir imágenes a Cloudinary o similar
-        // Por ahora, simularemos la subida con un timeout y URLs de placeholder
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        const newImageUrls = acceptedFiles.map(
-          (_, index) => `/placeholder.svg?height=600&width=800&text=Imagen+${value.length + index + 1}`,
-        )
-
-        onChange([...value, ...newImageUrls])
+        
+        const newPreviews = acceptedFiles.map(file => URL.createObjectURL(file))  // 🔥 crear URLS locales
+        const updatedFiles = [...files, ...acceptedFiles]
+        const updatedPreviews = [...value, ...newPreviews]
+  
+        setFiles(updatedFiles)
+        onChange(updatedPreviews, updatedFiles)   // 🔥 pasás previews + archivos
       } catch (error) {
         console.error("Error al subir imágenes:", error)
         toast.error("Error al subir imágenes")
@@ -42,7 +41,7 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
         setIsUploading(false)
       }
     },
-    [value, onChange, maxFiles],
+    [value, files, onChange, maxFiles],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -56,14 +55,30 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
   const removeImage = (index: number) => {
     const newImages = [...value]
     newImages.splice(index, 1)
-    onChange(newImages)
+
+    const newFiles = [...files]
+    newFiles.splice(index, 1)
+
+    setFiles(newFiles)
+    onChange(newImages, newFiles)
   }
 
   const reorderImages = (fromIndex: number, toIndex: number) => {
     const newImages = [...value]
     const [movedImage] = newImages.splice(fromIndex, 1)
     newImages.splice(toIndex, 0, movedImage)
-    onChange(newImages)
+
+    const newFiles = [...files]
+    const [movedFile] = newFiles.splice(fromIndex, 1)
+    newFiles.splice(toIndex, 0, movedFile)
+
+    setFiles(newFiles)
+    onChange(newImages, newFiles)
+  }
+
+  const removeAllImages = () => {
+    setFiles([])
+    onChange([], [])
   }
 
   return (
@@ -102,11 +117,12 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
             <h3 className="text-sm font-medium">
               Imágenes subidas ({value.length}/{maxFiles})
             </h3>
-            <Button type="button" variant="outline" size="sm" onClick={() => onChange([])} disabled={isUploading}>
+            <Button type="button" variant="outline" size="sm" onClick={removeAllImages} disabled={isUploading}>
               <Trash2 className="mr-2 h-4 w-4" />
               Eliminar todas
             </Button>
           </div>
+
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {value.map((src, index) => (
               <Card key={index} className="relative overflow-hidden">
@@ -142,17 +158,7 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
                     disabled={index === 0 || isUploading}
                     className="h-8 w-8"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="m12 19-7-7 7-7" />
                       <path d="M19 12H5" />
                     </svg>
@@ -165,17 +171,7 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
                     disabled={index === value.length - 1 || isUploading}
                     className="h-8 w-8"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14" />
                       <path d="m12 5 7 7-7 7" />
                     </svg>
@@ -184,10 +180,7 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
               </Card>
             ))}
             {value.length < maxFiles && (
-              <div
-                {...getRootProps()}
-                className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-primary hover:bg-primary/5"
-              >
+              <div {...getRootProps()} className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 transition-colors hover:border-primary hover:bg-primary/5">
                 <input {...getInputProps()} />
                 <ImagePlus className="h-8 w-8 text-muted-foreground" />
                 <span className="mt-2 text-xs text-muted-foreground">Añadir más</span>

@@ -6,7 +6,6 @@ import AsideSearch from '@/components/aside'
 import { SimpleTitle } from '@/components/simple-title'
 import { useFilters } from '@/context/filters-context'
 import { OrderSelect } from './order-filter'
-import { stat } from 'fs'
 
 export default function SearchPageContent() {
   const { allProperties } = useProperties()

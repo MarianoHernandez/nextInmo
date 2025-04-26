@@ -34,6 +34,8 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     document.addEventListener('mousedown', handleClickOutside);
 
+    handleScroll();
+
     return () => {
       setIsMenuOpen(false);
       window.removeEventListener('scroll', handleScroll);
@@ -132,7 +134,8 @@ export default function Navbar() {
 
           {/* Dropdown debajo del navbar */}
           {showUserMenu && (
-            <div className="absolute mt-2 bg-nav shadow-md rounded-md w-48 py-2">
+            <div className={`absolute mt-2 rounded-md w-48 py-2 
+              ${useSolidNav ? 'bg-nav' : ''}`}>
               {isAuthenticated ? (
                 userLinks.map(({ label, className, action }) => (
                   <button

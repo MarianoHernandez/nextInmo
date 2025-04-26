@@ -1,3 +1,5 @@
+"use server"
+
 import { BASE_URL } from "@/constants/constants";
 import { Home } from "@/types/home";
 import { Property } from "@/types/property";
@@ -58,3 +60,26 @@ export async function GetHomeProperties(): Promise<Home> {
         throw error;
     }
 }
+
+export const createProperty = async (propertyData: Omit<Property, 'id'>, files: File[], token: string) => {
+    const formData = new FormData();
+
+    formData.append("property", JSON.stringify(propertyData));
+
+    files.forEach((file) => formData.append("files", file));
+
+    try {
+        const response = await axios.post(`${BASE_URL}/property/create`, formData, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating property:', error);
+        throw error;
+    }
+};

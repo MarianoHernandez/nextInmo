@@ -35,14 +35,14 @@ export interface Property {
   neighborhood: string
   yearBuilt?: number
   imageSrc: string[]
-  contribution?: string
+  contribution?: number
   longDescription: string
   garage: boolean
   pinned: boolean
   approved: boolean
   createdAt: string
-  createdBy: any
-  rents: any[]
+  createdBy?: any
+  rents?: any[]
   features: string
 }
 

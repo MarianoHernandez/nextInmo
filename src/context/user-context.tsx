@@ -1,12 +1,13 @@
-'use client'
+"use client";
 
 import { getUsers, loginUser, logoutUser } from "@/service/user";
 import { User } from "@/types/user";
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface UserContextProps {
   user: User | null;
   isAuthenticated: boolean;
+  token: string | null;
   logoutUser: () => void;
   loginUser: (email: string, password: string) => void;
   fetchUserProfile: () => Promise<void>;
@@ -14,63 +15,75 @@ interface UserContextProps {
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [hasSession, setHasSession] = useState<boolean | null>(null);
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [hasSession, setHasSession] = useState<boolean>(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("userData");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    // Al cargar el contexto, intenta cargar el usuario de sessionStorage
+    const token = sessionStorage.getItem("token");
+    const userData = sessionStorage.getItem("user");
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+      setToken(token);
       setHasSession(true);
     } else {
-      setUser(null);
       setHasSession(false);
+      setToken(null);
+      setUser(null);
     }
-  }
-  , []);
+  }, []);
 
   const handlerLogin = async (email: string, password: string) => {
     try {
-        await loginUser(email, password);
-        await fetchUserProfile();
-        setHasSession(true);
+      const response = await loginUser(email, password);
+      sessionStorage.setItem("token", response.token);
+      sessionStorage.setItem("user", JSON.stringify(response.user));
+      setHasSession(true);
+      setToken(response.token);
+      setUser(response.user);
     } catch (error) {
-        console.error("Error during login:", error);
-        setHasSession(false);
-        localStorage.removeItem("userData"); // Eliminar usuario de localStorage
-        throw error;
+      console.error("Error during login:", error);
+      setHasSession(false);
+      setUser(null);
+      setToken(null);
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("userData");
+      throw error;
     }
-    };
+  };
 
   const fetchUserProfile = async () => {
     try {
       const userData = await getUsers();
       setUser(userData);
-      localStorage.setItem("userData", JSON.stringify(userData)); // Guardar en localStorage
+      sessionStorage.setItem("userData", JSON.stringify(userData));
     } catch (error) {
       console.warn("Error fetching user profile:", error);
-      localStorage.removeItem("userData");
+      sessionStorage.removeItem("userData");
       setUser(null);
     }
   };
 
   const handleLogout = async () => {
-    await logoutUser();
-    localStorage.removeItem("userData"); // Eliminar usuario de localStorage
+    sessionStorage.removeItem("userData");
+    sessionStorage.removeItem("token");
     setUser(null);
     setHasSession(false);
   };
-
 
   return (
     <UserContext.Provider
       value={{
         user,
+        token,
         isAuthenticated: hasSession === true && !!user,
         loginUser: handlerLogin,
         logoutUser: handleLogout,
-        fetchUserProfile
+        fetchUserProfile,
       }}
     >
       {children}
