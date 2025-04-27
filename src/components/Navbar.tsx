@@ -50,8 +50,8 @@ export default function Navbar() {
   ];
 
   const userLinks = [
-    { label: 'Mi perfil', className: "hover:bg-accent",action: () => router.push('/perfil') },
-    { label: 'Crear propiedad', className: "hover:bg-accent", action: () => router.push('/crear') },
+    { label: 'Mi perfil', className: "hover:bg-accent",action: () => router.push('/usuario/perfil') },
+    { label: 'Crear propiedad', className: "hover:bg-accent", action: () => router.push('/propiedades/crear') },
     { label: 'Cerrar sesión', className: "hover:bg-red", action: () => logoutUser() },
   ];
 

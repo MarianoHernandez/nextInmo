@@ -1,8 +1,7 @@
 "use client"
 
 import type { Property } from "@/types/property"
-import { PropertyCarousel } from "./PropertyCarousel"
-
+import { PropertyCarousel } from "./property-carousel"
 interface PropertyCarouselProps {
   properties: Property[]
   title: string

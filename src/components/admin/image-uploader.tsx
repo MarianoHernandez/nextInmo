@@ -9,13 +9,14 @@ import { toast } from "sonner"
 
 interface ImageUploaderProps {
   value: string[]
-  onChange: (value: string[], files?: File[]) => void
+  onChange: (value: string[], files?: File[], deleted?: string[]) => void
   maxFiles?: number
 }
 
 export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [files, setFiles] = useState<File[]>([])
+  const [deleted, setDeleted] = useState<string[]>([])
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -53,15 +54,23 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
   })
 
   const removeImage = (index: number) => {
-    const newImages = [...value]
-    newImages.splice(index, 1)
-
-    const newFiles = [...files]
-    newFiles.splice(index, 1)
-
-    setFiles(newFiles)
-    onChange(newImages, newFiles)
+    const newImages = [...value];
+    const removedImage = newImages.splice(index, 1)[0];
+  
+    const newFiles = [...files];
+    if (index < files.length) {
+      newFiles.splice(index, 1);
+    }
+  
+    if (removedImage && !removedImage.startsWith("blob:")) {
+      setDeleted(prev => [...prev, removedImage]);
+    }
+  
+    setFiles(newFiles);
+    onChange(newImages, newFiles, deleted.concat(removedImage.startsWith("blob:") ? [] : [removedImage]));
   }
+  
+  
 
   const reorderImages = (fromIndex: number, toIndex: number) => {
     const newImages = [...value]
@@ -77,10 +86,13 @@ export function ImageUploader({ value = [], onChange, maxFiles = 10 }: ImageUplo
   }
 
   const removeAllImages = () => {
-    setFiles([])
-    onChange([], [])
+    const deletedExisting = value.filter(img => !img.startsWith("blob:"));
+    
+    setFiles([]);
+    setDeleted(prev => [...prev, ...deletedExisting]);
+    
+    onChange([], [], deleted.concat(deletedExisting));
   }
-
   return (
     <div className="space-y-4">
       <div

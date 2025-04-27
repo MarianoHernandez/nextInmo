@@ -9,14 +9,11 @@ export function ProtectedPage({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
     if (!token) {
-      router.replace("/login"); // Redirecciona al login si no hay token
+      router.replace("/login");
     }
   }, [token, router]);
-
-  if (!token) {
-    return null; // o podrías poner un loader si querés
-  }
 
   return <>{children}</>;
 }

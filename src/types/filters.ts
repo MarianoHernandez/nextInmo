@@ -6,8 +6,8 @@ export type Filters = {
     dormitoriosMax: number
     bathsMin: number
     bathsMax: number
-    garage: boolean
-    pool: boolean
+    garage: boolean | undefined
+    pool: boolean | undefined
     precioMin: number
     precioMax: number
     areaMin: number

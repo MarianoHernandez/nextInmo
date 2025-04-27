@@ -81,3 +81,40 @@ export const createProperty = async (propertyData: Omit<Property, 'id'>, files: 
         throw error;
     }
 };
+
+export const updateProperty = async (
+    propertyData: Property,
+    deletedImages: string[],
+    newImages: File[],
+    token: string
+  ) => {
+    const formData = new FormData();
+    formData.append("property", JSON.stringify(propertyData));
+    formData.append("deletedImages", JSON.stringify(deletedImages));
+    newImages.forEach((file) => formData.append("files", file));
+    const res = await axios.put(`${BASE_URL}/properties/update`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'authorization': token,
+      },
+    });
+  
+    return await res.data;
+  };
+
+  export const deleteProperty = async (id: number, token:string): Promise<boolean> => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/properties/delete?id=${id}`, 
+        {
+          headers: {
+            'Accept': '*/*',
+            'authorization': token,
+          },
+        }
+      );
+      return response.data;
+    }catch(error){
+      console.error("Error al cargar las propiedades:", error);
+      return false;
+    }
+  }

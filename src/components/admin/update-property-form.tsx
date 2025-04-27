@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Neighborhoods, PropertyStatus, PropertyTypes } from "@/types/property";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ import { CheckCircle2, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { PropertyTypeLabels } from "@/utils/type-label";
 import { PropertyStatusLabels } from "@/utils/status-label";
 import { MultiSelect } from "../multi-select";
-import { createProperty } from "@/service/properties";
+import { updateProperty } from "@/service/properties";
 import { NeighborhoodLabels } from "@/utils/neighborhoods-labels";
 import { useUser } from "@/context/user-context";
 import { useProperties } from "@/context/property-context";
@@ -79,11 +79,15 @@ interface PropertyFormValues {
 
 export default function UpdatePropertyForm() {
   const router = useRouter();
+  const params = useParams();
+  const id = Number(params?.id);
   const [activeTab, setActiveTab] = useState("basic");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const { token } = useUser();
   const { allProperties } = useProperties();
+  const [isLoading, setIsLoading] = useState(true);
+  const [deletedImages, setDeletedImages] = useState<string[]>([]);
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>(
     {
       basic: false,
@@ -94,41 +98,85 @@ export default function UpdatePropertyForm() {
     }
   );
 
-  // Valores por defecto para el formulario
-  const defaultValues: Partial<PropertyFormValues> = {
-    title: "Casa para la venta",
-    shortDescription: "Descripcion corta de la propiedad",
-    longDescription:
-      "Descripcion larga de la propiedad. Con mas de 50 caracteres",
+  let defaultValues: Partial<PropertyFormValues> = {
+    title: "",
+    shortDescription: "",
+    longDescription: "",
     type: PropertyTypes.HOUSE,
     status: [PropertyStatus.ForSale],
-    price: 15000,
-    contribution: 12000,
-    lotSize: 500,
-    features:
-      '[{"title":"Casa Principal","values":[{"title":"Techo","value":"Chapa"},{"title":"Piso","value":"Parque"}]},{"title":"Casa Secundaria","values":[{"title":"Techo","value":"Plancha"},{"title":"Piso","value":"Ceramica"}]}]',
-    area: 200,
-    rooms: 1,
-    bathrooms: 2,
-    yearBuilt: 2001,
+    price: undefined,
+    contribution: undefined,
+    lotSize: undefined,
+    features: "",
+    area: undefined,
+    rooms: undefined,
+    bathrooms: undefined,
+    yearBuilt: undefined,
     pool: false,
     garage: false,
-    address: "Parada 18",
+    address: "",
     neighborhood: undefined,
     geoCoordinates: {
       lat: -34.6345508,
       lng: -54.1634234,
     },
     imageSrc: [],
-    pinned: true,
+    pinned: false,
     approved: true,
     createdAt: new Date().toISOString(),
   };
+
+  useEffect(() => {
+    const property = allProperties.find((p) => p.id === id);
+    if (!property) {
+      toast.error("Propiedad no encontrada");
+      router.push("/ventas");
+      return;
+    }
+
+    form.reset({
+      title: property.title,
+      shortDescription: property.shortDescription,
+      longDescription: property.longDescription,
+      type: property.type,
+      status: property.status,
+      price: property.price,
+      contribution: property.contribution,
+      lotSize: property.lotSize,
+      area: property.area,
+      rooms: property.rooms,
+      bathrooms: property.bathrooms,
+      yearBuilt: property.yearBuilt,
+      pool: property.pool,
+      garage: property.garage,
+      address: property.address,
+      neighborhood: property.neighborhood as Neighborhoods,
+      geoCoordinates: {
+        lat: property.geoCoordinates.lat,
+        lng: property.geoCoordinates.lng,
+      },
+      features: property.features,
+      imageSrc: property.imageSrc,
+      pinned: property.pinned,
+      approved: property.approved,
+      createdAt: property.createdAt,
+    });
+
+    setIsLoading(false);
+  }, [allProperties, id, router]);
 
   const form = useForm<PropertyFormValues>({
     defaultValues,
     mode: "onChange",
   });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   // Función para marcar un paso como completado
   const markStepCompleted = (step: string, isCompleted = true) => {
@@ -261,32 +309,41 @@ export default function UpdatePropertyForm() {
     }
   };
 
-  // Función para manejar el envío del formulario
   const onSubmit = async (data: PropertyFormValues) => {
     try {
       setIsSubmitting(true);
-
+  
       if (!token) {
         toast.error("Sesión expirada. Por favor inicie sesión nuevamente.");
         router.push("/login");
         return;
       }
-
-      console.log("Datos de la propiedad:", data);
-
-      const propertie = await createProperty(data, imageFiles, token);
-      toast.success("Propiedad creada con éxito");
-
-      allProperties.push(propertie);
-      localStorage.setItem("AllProperties", JSON.stringify(allProperties));
-      router.push("/propiedades/" + propertie.id);
+  
+      const updatedProperty = await updateProperty(
+        { id, ...data },
+        deletedImages,
+        imageFiles,
+        token
+      );
+  
+      toast.success("Propiedad actualizada con éxito");
+  
+      // 🔥 Actualizar el array reemplazando la propiedad por ID
+      const updatedProperties = allProperties.map((prop) =>
+        prop.id === updatedProperty.id ? updatedProperty : prop
+      );
+  
+      localStorage.setItem("AllProperties", JSON.stringify(updatedProperties));
+  
+      router.push("/propiedades/" + updatedProperty.id);
     } catch (error) {
-      console.error("Error al crear la propiedad:", error);
-      toast.error("Error al crear la propiedad");
+      console.error("Error al actualizar la propiedad:", error);
+      toast.error("Error al actualizar la propiedad");
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   // Función para renderizar el indicador de estado del paso
   const renderStepIndicator = (step: string) => {
@@ -301,9 +358,9 @@ export default function UpdatePropertyForm() {
   return (
     <div className="container nav_padding mx-auto py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Crear Nueva Propiedad</h1>
+        <h1 className="text-3xl font-bold">Actualizar una Propiedad</h1>
         <p className="text-muted-foreground mt-2">
-          Complete el formulario para añadir una nueva propiedad al sistema.
+          Complete el formulario para actualizar una propiedad.
         </p>
       </div>
       <Form {...form}>
@@ -857,9 +914,20 @@ export default function UpdatePropertyForm() {
                     control={form.control}
                     name="features"
                     render={({ field }) => {
-                      const features = field.value
-                        ? JSON.parse(field.value)
-                        : [];
+                      const features = useMemo(() => {
+                        if (!field.value) return [];
+
+                        if (typeof field.value === "string") {
+                          try {
+                            const parsed = JSON.parse(field.value);
+                            return Array.isArray(parsed) ? parsed : [];
+                          } catch {
+                            return [];
+                          }
+                        }
+
+                        return Array.isArray(field.value) ? field.value : [];
+                      }, [field.value]);
 
                       const updateFeature = (
                         index: number,
@@ -1130,9 +1198,10 @@ export default function UpdatePropertyForm() {
                         <FormControl>
                           <ImageUploader
                             value={field.value}
-                            onChange={(previews, files) => {
+                            onChange={(previews, files, deleted) => {
                               field.onChange(previews);
                               setImageFiles(files || []);
+                              setDeletedImages(deleted || []);
                             }}
                             maxFiles={50}
                           />
@@ -1349,7 +1418,7 @@ export default function UpdatePropertyForm() {
                         Creando...
                       </>
                     ) : (
-                      "Crear Propiedad"
+                      "Actualizar Propiedad"
                     )}
                   </Button>
                 )}

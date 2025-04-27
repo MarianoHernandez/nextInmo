@@ -10,6 +10,7 @@ type PropertyContextType = {
   homeProperties: Home
   loading: boolean
   reloadProperties: () => Promise<void>
+  setAllProperties: (properties: Property[]) => void
 }
 
 const PropertyContext = createContext<PropertyContextType | undefined>(undefined)
@@ -67,7 +68,7 @@ export function PropertyProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <PropertyContext.Provider value={{ allProperties, homeProperties, loading, reloadProperties: fetchProperties }}>
+    <PropertyContext.Provider value={{ allProperties, homeProperties, loading, reloadProperties: fetchProperties, setAllProperties }}>
       {children}
     </PropertyContext.Provider>
   )

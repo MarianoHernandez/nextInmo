@@ -170,8 +170,13 @@ export function SearchFilters() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Garaje</label>
                 <Select
-                  onValueChange={(value) =>
-                    setFilters((prev) => ({ ...prev, garage: value === "yes" }))
+                  onValueChange={(value) =>{
+                    setFilters((prev) => ({
+                      ...prev,
+                      garage: value === "any" ? undefined : value === "yes",
+                    }))
+                  }
+
                   }
                 >
                   <SelectTrigger className="w-full p-4 rounded-none">
@@ -188,9 +193,14 @@ export function SearchFilters() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Piscina</label>
                 <Select
-                  onValueChange={(value) =>
-                    setFilters((prev) => ({ ...prev, pool: value === "yes" }))
+                  onValueChange={(value) =>{
+                    setFilters((prev) => ({
+                      ...prev,
+                      pool: value === "any" ? undefined : value === "yes",
+                    }))
                   }
+                  }
+
                 >
                   <SelectTrigger className="w-full p-4 rounded-none">
                     <SelectValue placeholder="Cualquiera" />

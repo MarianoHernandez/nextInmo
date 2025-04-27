@@ -13,11 +13,10 @@ export default function SearchPageContent() {
   const { filters } = useFilters()
 
   const filteredProperties = useMemo(() => {
-    console.log('filters:', filters)
-console.log('filters.orderBy:', filters.orderBy)
-console.log('allProperties:', allProperties)
     const filtered = allProperties.filter((property) => {
-      const matchesText =
+      let matchesText = true
+      if(filters.searchText !== ''){
+        matchesText =
         property.title.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         property.shortDescription?.toLowerCase().includes(filters.searchText.toLowerCase()) ||
         property.longDescription?.toLowerCase().includes(filters.searchText.toLowerCase()) ||
@@ -27,7 +26,9 @@ console.log('allProperties:', allProperties)
         property.status.some((status) =>
           status.toLowerCase().includes(filters.searchText.toLowerCase())
         ) ||
-        property.id.toString().includes(filters.searchText.toLowerCase())
+        property.id.toString().includes(filters.searchText)
+      }
+
 
       const matchesLocation =
         filters.location === 'cualquiera' ||
@@ -39,8 +40,8 @@ console.log('allProperties:', allProperties)
         (property.rooms ?? 0) >= filters.dormitoriosMin && (property.rooms ?? 0) <= filters.dormitoriosMax
       const matchesBaths =
         (property.bathrooms ?? 0) >= filters.bathsMin && (property.bathrooms ?? 0) <= filters.bathsMax
-      const matchesGarage = property.garage === filters.garage
-      const matchesPool = property.pool === filters.pool
+        const matchesGarage = filters.garage === undefined || property.garage === filters.garage
+        const matchesPool = filters.pool === undefined || property.pool === filters.pool
       const matchesPrice = property.price >= filters.precioMin && property.price <= filters.precioMax
       const matchesArea = (property.area ?? 0) >= filters.areaMin && (property.area ?? 0) <= filters.areaMax
 
