@@ -58,7 +58,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchUserProfile = async () => {
     try {
-      const userData = await getUsers();
+      const userData = token ? await getUsers(token): null;
       setUser(userData);
       sessionStorage.setItem("userData", JSON.stringify(userData));
     } catch (error) {

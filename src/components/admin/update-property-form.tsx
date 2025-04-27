@@ -77,7 +77,7 @@ interface PropertyFormValues {
   createdAt: string;
 }
 
-export default function CreatePropertyForm() {
+export default function UpdatePropertyForm() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("basic");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -96,29 +96,31 @@ export default function CreatePropertyForm() {
 
   // Valores por defecto para el formulario
   const defaultValues: Partial<PropertyFormValues> = {
-    title: "",
-    shortDescription: "",
-    longDescription: "",
+    title: "Casa para la venta",
+    shortDescription: "Descripcion corta de la propiedad",
+    longDescription:
+      "Descripcion larga de la propiedad. Con mas de 50 caracteres",
     type: PropertyTypes.HOUSE,
     status: [PropertyStatus.ForSale],
-    price: undefined,
-    contribution: undefined,
-    lotSize: undefined,
-    features: "",
-    area: undefined,
-    rooms: undefined,
-    bathrooms: undefined,
-    yearBuilt: undefined,
+    price: 15000,
+    contribution: 12000,
+    lotSize: 500,
+    features:
+      '[{"title":"Casa Principal","values":[{"title":"Techo","value":"Chapa"},{"title":"Piso","value":"Parque"}]},{"title":"Casa Secundaria","values":[{"title":"Techo","value":"Plancha"},{"title":"Piso","value":"Ceramica"}]}]',
+    area: 200,
+    rooms: 1,
+    bathrooms: 2,
+    yearBuilt: 2001,
     pool: false,
     garage: false,
-    address: "",
+    address: "Parada 18",
     neighborhood: undefined,
     geoCoordinates: {
       lat: -34.6345508,
       lng: -54.1634234,
     },
     imageSrc: [],
-    pinned: false,
+    pinned: true,
     approved: true,
     createdAt: new Date().toISOString(),
   };

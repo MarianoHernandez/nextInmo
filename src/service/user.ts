@@ -14,13 +14,14 @@ export async function loginUser(
   return res.data;
 }
 
-export const getUsers = async () => {
-  const res = await fetch(`${BASE_URL}/user/profile`, {
-    method: "GET",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
+export const getUsers = async (token: string) => {
+  const res = await axios.get(`${BASE_URL}/user/profile`, {
+    headers: { 
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
   });
-  return await res.json();
+  return await res.data;
 };
 
 export const logoutUser = async () => {

@@ -4,4 +4,5 @@ export interface User {
     lastName: string;
     phone: string;
     admin: boolean;
+    createdAt: string;
 }

@@ -28,6 +28,7 @@ import { formatPrice } from "@/utils/property-utils";
 import PropertyMap from "@/components/property-map";
 import ContactForm from "@/components/contact-form";
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
+import { NeighborhoodLabels } from "@/utils/neighborhoods-labels";
 
 interface PropertyDetailProps {
   property: Property;
@@ -100,7 +101,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
         <div className="mt-2 flex items-center text-muted-foreground">
           <MapPin className="mr-1 h-4 w-4" />
           <span>
-            {property.address}, {property.neighborhood}
+            {property.address}, {NeighborhoodLabels[property.neighborhood]}
           </span>
         </div>
       </div>
@@ -156,7 +157,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
             </div>
 
             {/* Badges */}
-            <div className="absolute left-4 top-4 flex flex-col gap-2">
+            <div className="absolute left-4 top-4 flex flex-row gap-2">
               <Badge
                 variant={
                   property.status.includes(PropertyStatus.ForRent)
@@ -167,7 +168,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
               >
                 {getStatusLabel(property.status)}
               </Badge>
-
+              
               {property.pinned && (
                 <Badge variant="destructive" className="text-sm">
                   Destacado
@@ -432,7 +433,7 @@ export default function PropertyDetail({ property }: PropertyDetailProps) {
                   <div className="mb-4">
                     <p className="flex items-center">
                       <MapPin className="mr-2 h-5 w-5 text-primary" />
-                      {property.address}, {property.neighborhood}
+                      {property.address}, {NeighborhoodLabels[property.neighborhood]}
                     </p>
                   </div>
                   <div className="h-[400px] w-full overflow-hidden rounded-lg">

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useFilters } from "@/context/filters-context";
-import { locations } from "@/constants/barrios";
-import { PropertyTypes } from "@/types/property";
+import { Neighborhoods, PropertyTypes } from "@/types/property";
 import { PropertyTypeLabels } from "@/utils/type-label";
 import {
   Accordion,
@@ -19,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { Filters } from "@/types/filters";
+import { NeighborhoodLabels } from "@/utils/neighborhoods-labels";
 
 const AsideSearch = () => {
   const { filters, setFilters } = useFilters();
@@ -106,20 +106,19 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               Cualquiera
             </button>
           </li>
-          {locations.map((loc, index) => (
-            <li key={index}>
+
+            {Object.values(Neighborhoods).map((type) => (
+            <li key={type}>
               <button
-                onClick={() => update("location", loc.value.toLowerCase())}
-                className={`hover:underline ${
-                  filters.location === loc.value.toLowerCase()
-                    ? "text-green-500"
-                    : ""
-                }`}
+              onClick={() => update("location", type.toLowerCase())}
+              className={`hover:underline ${
+                filters.location === type.toLowerCase() ? "text-green-500" : ""
+              }`}
               >
-                {loc.label}
+              {NeighborhoodLabels[type]}
               </button>
             </li>
-          ))}
+            ))}
         </ul>
       </AccordionContent>
     </AccordionItem>

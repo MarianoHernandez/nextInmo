@@ -31,7 +31,7 @@ export default function Home() {
       areaMax: Infinity,
       areaLandMin: 0,
       areaLandMax: Infinity,
-      orderBy: 'priceDesc',
+      orderBy: 'date-desc',
     })
   }, [])
 

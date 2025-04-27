@@ -1,4 +1,3 @@
-"use server"
 
 import { BASE_URL } from "@/constants/constants";
 import { Home } from "@/types/home";
@@ -69,11 +68,10 @@ export const createProperty = async (propertyData: Omit<Property, 'id'>, files: 
     files.forEach((file) => formData.append("files", file));
 
     try {
-        const response = await axios.post(`${BASE_URL}/property/create`, formData, {
-            withCredentials: true,
+        const response = await axios.post(`${BASE_URL}/properties/create`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': token,
             },
         });
 

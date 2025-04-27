@@ -6,16 +6,6 @@ export function extractFeatures(property: Property): string[] {
   // Add property type
   features.push(property.type === "house" ? "Casa" : "Terreno");
   
-  // Add size features
-  // if (property.lotSize) {
-  //   features.push(`Terreno: ${property.lotSize}m²`);
-  // }
-  
-  // if (property.area) {
-  //   features.push(`Área: ${property.area}m²`);
-  // }
-  
-  // Add amenities
   if (property.pool) {
     features.push("Piscina");
   }

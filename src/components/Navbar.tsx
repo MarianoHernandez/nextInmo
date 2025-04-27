@@ -15,7 +15,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, logoutUser } = useUser();
 
   const isHome = pathname === '/';
   const useSolidNav = scrolled || !isHome;
@@ -52,7 +52,7 @@ export default function Navbar() {
   const userLinks = [
     { label: 'Mi perfil', className: "hover:bg-accent",action: () => router.push('/perfil') },
     { label: 'Crear propiedad', className: "hover:bg-accent", action: () => router.push('/crear') },
-    { label: 'Cerrar sesión', className: "hover:bg-red", action: () => console.log('Cerrar sesión') },
+    { label: 'Cerrar sesión', className: "hover:bg-red", action: () => logoutUser() },
   ];
 
   return (

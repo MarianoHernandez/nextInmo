@@ -15,6 +15,30 @@ export enum PropertyTypes {
   STORE = 'store',
   OTHER = 'other',
 }
+
+export enum Neighborhoods {
+  Anaconda = "anaconda",
+  Antoniopolis = "antoniopolis",
+  Arachania = "arachania",
+  Atlantica = "atlantica",
+  BarrioCountry = "barrio-country",
+  BarrioParque = "barrio-parque",
+  CerroAsperoGarzon = "cerro-aspero-garzon",
+  CostaAzul = "costa-azul",
+  LaAguada = "la-aguada",
+  LaPaloma = "la-paloma",
+  LaPedrera = "la-pedrera",
+  OceaniaDelPolonio = "oceania-del-polonio",
+  PlayaSerena = "playa-serena",
+  PuebloNuevo = "pueblo-nuevo",
+  PuntaRubia = "punta-rubia",
+  Rocha = "rocha",
+  SanAntonio = "san-antonio",
+  SanSebastianDeLaPedrera = "san-sebastian-de-la-pedrera",
+  SantaIsabel = "santa-isabel",
+  SierraDeRocha = "sierra-de-rocha",
+}
+
 export interface Property {
   id: number
   title: string
@@ -32,7 +56,7 @@ export interface Property {
     lat: number
     lng: number
   }
-  neighborhood: string
+  neighborhood: Neighborhoods
   yearBuilt?: number
   imageSrc: string[]
   contribution?: number
