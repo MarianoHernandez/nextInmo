@@ -104,7 +104,7 @@ export default function CreatePropertyForm() {
     price: undefined,
     contribution: undefined,
     lotSize: undefined,
-    features: "",
+    features: '[{"title":"Casa Principal","values":[{"title":"Cimientos","value":""},{"title":"Paredes","value":""},{"title":"Techo","value":""},{"title":"Pisos","value":""},{"title":"Aberturas","value":""}]}]',
     area: undefined,
     rooms: undefined,
     bathrooms: undefined,
